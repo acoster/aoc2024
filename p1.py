@@ -1,7 +1,7 @@
 list_a = []
 list_b = []
 
-with open('input1.txt') as f:
+with open('inputs/input1.txt') as f:
     for line in f.readlines():
         a, b = line.split()
         list_a.append(int(a))

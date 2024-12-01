@@ -3,7 +3,7 @@ from collections import defaultdict
 distribution_a = defaultdict(int)
 distribution_b = defaultdict(int)
 
-with open('input1.txt') as f:
+with open('inputs/input1.txt') as f:
     for line in f.readlines():
         a, b = line.split()
         distribution_a[int(a)] += 1
