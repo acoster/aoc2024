@@ -1,4 +1,9 @@
 py_binary(
-  name = "p1",
-  srcs = ["p1.py"],
+    name = "p1",
+    srcs = ["p1.py"],
+)
+
+py_binary(
+    name = "p2",
+    srcs = ["p2.py"],
 )
