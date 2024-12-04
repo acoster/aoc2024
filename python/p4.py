@@ -9,13 +9,13 @@ def find_all(haystack: AnyStr, needle: AnyStr) -> Iterator[int]:
         start = haystack.find(needle, start + len(needle))
 
 
-def count_horizontal(line: AnyStr):
-    return len([x for x in find_all(line, 'XMAS')]) + len(
-        [x for x in find_all(line, 'SAMX')])
+def count_horizontal(line: AnyStr, needle : AnyStr = 'XMAS') -> int:
+    return len([x for x in find_all(line, needle)]) + len(
+        [x for x in find_all(line, needle[::-1])])
 
 
 def count_xmases(lines: List[AnyStr]) -> int:
-    """Counts instances of the word XMAS.
+    """Counts instances of the word XMAS in the puzzle.
 
     >>> count_xmases(['XMAS', 'SAMX', 'LEVI', 'YANV'])
     2
@@ -53,6 +53,31 @@ def count_xmases(lines: List[AnyStr]) -> int:
 
     return xmases
 
+def count_mas_exes(lines: List[AnyStr]) -> int:
+    """Count exes made out of MAS.
+
+    >>> count_mas_exes(['M.S', '.A.', 'M.S'])
+    1
+    >>> count_mas_exes(['MMMSXXMASM', 'MSAMXMSMSA', 'AMXSXMAAMM', 'MSAMASMSMX', 'XMASAMXAMM', 'XXAMMXXAMA', 'SMSMSASXSS', 'SAXAMASAAA', 'MAMMMXMMMM', 'MXMXAXMASX'])
+    9
+    """
+    xmases = 0
+    width = len(lines[0])
+
+    for i in range(1, width - 1):
+        for j in find_all(lines[i], 'A'):
+            if j == 0 or j == width - 1: continue
+
+            down = ''.join(
+                [lines[i - 1][j - 1], lines[i][j], lines[i + 1][j + 1]])
+            up = ''.join(
+                [lines[i + 1][j - 1], lines[i][j], lines[i + -1][j + 1]])
+
+            if count_horizontal(down, 'MAS') == 1 and count_horizontal(up, 'MAS') == 1:
+                xmases += 1
+
+    return xmases
+
 
 if __name__ == '__main__':
     import doctest
@@ -63,3 +88,6 @@ if __name__ == '__main__':
 
     result = count_xmases(puzzle)
     print(f'XMAS count: {result}')
+
+    result = count_mas_exes(puzzle)
+    print(f'MAS exes count: {result}')
