@@ -7,13 +7,16 @@ class Solver(object):
     def __init__(self, dependencies: Mapping[int, List[int]]):
         self.__dependencies = dependencies
 
-    def find_middle_page(self, pages:  List[int]) -> int:
+    def find_middle_page(self, pages:  List[int], fix_mistakes: bool = False) -> int:
         """Finds the middle page, or return 0 if invalid input was provided."""
 
         sorter = graphlib.TopologicalSorter()
         for page, predecessors in self.__dependencies.items():
             if page not in pages: continue
             sorter.add(page, *[p for p in predecessors if p in pages])
+
+        visited_pages = []
+        has_fixed = False
 
         sorter.prepare()
         ready_pages = set(sorter.get_ready())
@@ -24,16 +27,31 @@ class Solver(object):
                     return 0
 
             if page not in ready_pages:
-                return 0
+                if not fix_mistakes:
+                    return 0
+
+                has_fixed = True
+                if len(ready_pages) != 1:
+                    raise Exception('Too many to choose from')
+
+                page = ready_pages.pop()
+                ready_pages.add(page)
+
+            visited_pages.append(page)
             ready_pages.remove(page)
             sorter.done(page)
 
-        return pages[int((len(pages) -1) / 2)]
+        if not has_fixed and fix_mistakes:
+            return 0
+
+        return visited_pages[int((len(pages) -1) / 2)]
 
 
 
 
-s = 0
+sum_without_fix = 0
+sum_with_fixed = 0
+
 dependencies = defaultdict(list)
 with open('p5.txt') as f:
     for line in f.readlines():
@@ -46,6 +64,8 @@ with open('p5.txt') as f:
             solver = Solver(dependencies)
         elif line.find(',') != -1:
             p = [int(x) for x in line.split(',')]
-            s += solver.find_middle_page(p)
+            sum_with_fixed += solver.find_middle_page(p, fix_mistakes=True)
+            sum_without_fix += solver.find_middle_page(p, fix_mistakes=False)
 
-print(s)
+print(f'Result without fixes: {sum_without_fix}')
+print(f'Result with fixes: {sum_with_fixed}')
