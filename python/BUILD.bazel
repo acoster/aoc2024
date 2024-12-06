@@ -7,3 +7,23 @@ py_binary(
     name = "p2",
     srcs = ["p2.py"],
 )
+
+py_binary(
+    name = "p3",
+    srcs = ["p3.py"],
+)
+
+py_binary(
+    name = "p4",
+    srcs = ["p4.py"],
+)
+
+py_binary(
+    name = "p5",
+    srcs = ["p5.py"],
+)
+
+py_binary(
+    name = "p6",
+    srcs = ["p6.py"],
+)
