@@ -6,8 +6,10 @@ def coalesce(a: List[Optional[int]]) -> Optional[int]:
         if x is not None:
             return x
 
-def int_cat(a:int, b:int) -> int:
+
+def int_cat(a: int, b: int) -> int:
     return int('%d%d' % (a, b))
+
 
 def solve(target: int, operands: List[int], acc: Optional[int] = None, enable_concatenation: bool = False) -> Optional[
     int]:
@@ -48,6 +50,7 @@ def solve(target: int, operands: List[int], acc: Optional[int] = None, enable_co
 
 if __name__ == "__main__":
     import doctest
+
     doctest.testmod()
 
     total = 0
@@ -64,7 +67,6 @@ if __name__ == "__main__":
 
             if solve(target, ops, enable_concatenation=True) is not None:
                 total_with_concatenation += target
-
 
     print(f'The total is {total}')
     print(f'The total with concatenation is {total_with_concatenation}')

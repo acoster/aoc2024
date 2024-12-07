@@ -9,7 +9,7 @@ def find_all(haystack: AnyStr, needle: AnyStr) -> Iterator[int]:
         start = haystack.find(needle, start + len(needle))
 
 
-def count_horizontal(line: AnyStr, needle : AnyStr = 'XMAS') -> int:
+def count_horizontal(line: AnyStr, needle: AnyStr = 'XMAS') -> int:
     return len([x for x in find_all(line, needle)]) + len(
         [x for x in find_all(line, needle[::-1])])
 
@@ -45,13 +45,12 @@ def count_xmases(lines: List[AnyStr]) -> int:
         xmases += count_horizontal(''.join([lines[i - x][width - x - 1] for x
                                             in range(i + 1)]))
 
-
     for i in range(width):
         column = ''.join([x[i] for x in lines])
         xmases += count_horizontal(column)
 
-
     return xmases
+
 
 def count_mas_exes(lines: List[AnyStr]) -> int:
     """Count exes made out of MAS.
@@ -81,6 +80,7 @@ def count_mas_exes(lines: List[AnyStr]) -> int:
 
 if __name__ == '__main__':
     import doctest
+
     doctest.testmod()
 
     with open('p4.txt') as f:

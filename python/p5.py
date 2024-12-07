@@ -1,13 +1,13 @@
 import graphlib
-from typing import Mapping, List, AnyStr
 from collections import defaultdict
+from typing import Mapping, List
 
 
 class Solver(object):
     def __init__(self, dependencies: Mapping[int, List[int]]):
         self.__dependencies = dependencies
 
-    def find_middle_page(self, pages:  List[int], fix_mistakes: bool = False) -> int:
+    def find_middle_page(self, pages: List[int], fix_mistakes: bool = False) -> int:
         """Finds the middle page, or return 0 if invalid input was provided."""
 
         sorter = graphlib.TopologicalSorter()
@@ -44,9 +44,7 @@ class Solver(object):
         if not has_fixed and fix_mistakes:
             return 0
 
-        return visited_pages[int((len(pages) -1) / 2)]
-
-
+        return visited_pages[int((len(pages) - 1) / 2)]
 
 
 sum_without_fix = 0

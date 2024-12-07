@@ -1,6 +1,6 @@
+from collections import namedtuple
 from enum import Enum
 from typing import List, AnyStr, Tuple, Optional, Set, Iterator
-from collections import namedtuple
 
 
 class Direction(Enum):

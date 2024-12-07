@@ -1,5 +1,5 @@
-from typing import AnyStr, List, Tuple
 import re
+from typing import AnyStr
 
 
 def run(data: AnyStr, enable_do: bool = False) -> int:
@@ -13,7 +13,7 @@ def run(data: AnyStr, enable_do: bool = False) -> int:
     total = 0
     pattern = re.compile(r"(do\(\)|don't\(\)|mul\((\d{1,3}),(\d{1,3})\))")
     enabled = True
-    for match in  pattern.findall(data):
+    for match in pattern.findall(data):
         if match[0].startswith("mul"):
             total += int(match[1]) * int(match[2]) if enabled else 0
         elif enable_do:
@@ -21,8 +21,10 @@ def run(data: AnyStr, enable_do: bool = False) -> int:
 
     return total
 
+
 if __name__ == '__main__':
     import doctest
+
     doctest.testmod()
 
     with open('p3.txt') as f:

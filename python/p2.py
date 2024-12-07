@@ -1,7 +1,6 @@
-from typing import AnyStr, Sequence
+from typing import List
 
-
-def is_safe(row: list[int], dampen = False) -> bool:
+def is_safe(row: List[int], dampen=False) -> bool:
     """Determine if a string is safe or not.
 
     >>> is_safe([7, 6, 4, 2, 1])
@@ -30,8 +29,10 @@ def is_safe(row: list[int], dampen = False) -> bool:
 
     return True
 
+
 if __name__ == '__main__':
     import doctest
+
     doctest.testmod()
 
     safe = 0
@@ -39,7 +40,7 @@ if __name__ == '__main__':
 
     with open('inputs/p2.txt', 'r') as file:
         for line in file.readlines():
-            values = [int(x) for x in  line.split()]
+            values = [int(x) for x in line.split()]
             if is_safe(values, False):
                 safe += 1
                 safe_with_dampening += 1
