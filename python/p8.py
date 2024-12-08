@@ -1,6 +1,6 @@
 from collections import defaultdict
 from itertools import permutations
-from typing import List, AnyStr, Set
+from typing import List, AnyStr, Set, Tuple
 
 
 class Coord(object):
@@ -39,16 +39,22 @@ class Solution(object):
                 if roof_map[i][j] != '.':
                     self.antennas[roof_map[i][j]].append(Coord(i, j))
 
-    def find_antinodes(self) -> Set[Coord]:
-        anti_nodes = set()
+    def find_anti_nodes(self) -> Tuple[Set[Coord], Set[Coord]]:
+        p1_anti_nodes = set()
+        p2_anti_nodes = set()
 
         for frequency in self.antennas:
             for a1, a2 in permutations(self.antennas[frequency], 2):
-                antinode = a2 + (a2 - a1)
+                delta = a2 - a1
+                antinode = a2 + delta
+                p2_anti_nodes.add(a2)
                 if antinode.in_bounds(self.roof_map):
-                    anti_nodes.add(antinode)
+                    p1_anti_nodes.add(antinode)
+                    while antinode.in_bounds(self.roof_map):
+                        p2_anti_nodes.add(antinode)
+                        antinode += delta
 
-        return anti_nodes
+        return p1_anti_nodes, p2_anti_nodes
 
 
 if __name__ == '__main__':
@@ -56,5 +62,6 @@ if __name__ == '__main__':
         l = [x.strip() for x in f.readlines()]
 
     s = Solution(l)
-    p1_antinodes = s.find_antinodes()
+    (p1_antinodes, p2_antinodes) = s.find_anti_nodes()
     print(f'p1 Antinodes: {len(p1_antinodes)}')
+    print(f'p2 Antinodes: {len(p2_antinodes)}')
