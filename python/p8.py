@@ -62,6 +62,6 @@ if __name__ == '__main__':
         l = [x.strip() for x in f.readlines()]
 
     s = Solution(l)
-    (p1_antinodes, p2_antinodes) = s.find_anti_nodes()
+    p1_antinodes, p2_antinodes = s.find_anti_nodes()
     print(f'p1 Antinodes: {len(p1_antinodes)}')
     print(f'p2 Antinodes: {len(p2_antinodes)}')
