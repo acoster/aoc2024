@@ -1,6 +1,6 @@
-from copy import deepcopy
-from collections import defaultdict
 import heapq
+from collections import defaultdict
+from copy import deepcopy
 from typing import Iterable, List, AnyStr, Sized
 
 
