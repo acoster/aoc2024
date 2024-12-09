@@ -1,8 +1,9 @@
+from copy import deepcopy
 from typing import Iterable, List, AnyStr, Sized
 
 
 class Block(Sized):
-    def __init__(self, capacity:int, data: List[int]):
+    def __init__(self, capacity: int, data: List[int]):
         self.capacity = capacity
         self.data = data.copy()
 
@@ -47,7 +48,7 @@ def generate_filesystem(line: AnyStr) -> List[Block]:
     for i in range(len(line)):
         capacity = int(line[i])
         file_data = []
-        if i%2 == 0:
+        if i % 2 == 0:
             file_data = [file_id] * capacity
             file_id += 1
         blocks.append(Block(capacity, file_data))
@@ -71,6 +72,7 @@ def compact(blocks: List[Block]) -> List[Block]:
     >>> compact_str(compact(generate_filesystem("2333133121414131402")))
     '0099811188827773336446555566..............'
     """
+    blocks = deepcopy(blocks)
     free_block = 1
     file_block = len(blocks) - 1
     if file_block % 2 == 1: file_block -= 1
@@ -89,6 +91,24 @@ def compact(blocks: List[Block]) -> List[Block]:
 
     return blocks
 
+
+def defrag(blocks: List[Block]) -> List[Block]:
+    blocks = deepcopy(blocks)
+    file_id = len(blocks) - 1
+    if file_id % 2 == 1: file_id -= 1
+
+    for file_id in range(file_id, 1, -2):
+        file_size = len(blocks[file_id])
+        for space_id in range(1, file_id, 2):
+            if blocks[space_id].free_space() >= file_size:
+                data_to_insert = blocks[file_id].pop(file_size)
+                blocks[space_id].insert_data(data_to_insert)
+                break
+        file_id -= 2
+
+    return blocks
+
+
 def checksum(blocks: Iterable[Block]) -> int:
     """Calculate checksum of blocks.
     >>> checksum(compact(generate_filesystem("2333133121414131402")))
@@ -102,6 +122,7 @@ def checksum(blocks: Iterable[Block]) -> int:
 
     return result
 
+
 if __name__ == '__main__':
     import doctest
 
@@ -112,5 +133,7 @@ if __name__ == '__main__':
 
     blocks = generate_filesystem(data)
     compacted = compact(blocks)
-    answer = checksum(compacted)
-    print(f'The checksum is {answer}')
+    defragged = defrag(blocks)
+    checksum_compacted = checksum(compacted)
+    checksum_defraged = checksum(defragged)
+    print(f'The checksums are {checksum_compacted} and {checksum_defraged}')
