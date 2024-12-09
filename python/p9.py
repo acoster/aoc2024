@@ -12,7 +12,8 @@ class Block(Sized):
 
     def insert_data(self, data: List[int]) -> None:
         if len(data) > self.free_space():
-            raise Exception(f'File size {len(data)} exceeds free_space {self.free_space()}')
+            raise Exception(
+                f'File size {len(data)} exceeds free_space {self.free_space()}')
         self.data += data
 
     def pop(self, size: int) -> List[int]:
@@ -21,7 +22,7 @@ class Block(Sized):
         self.data, result = self.data[:-size], self.data[-size:]
         return result
 
-    def checksum(self, first_subblock_id: int):
+    def checksum(self, first_subblock_id: int) -> int:
         result = 0
         for i in range(len(self.data)):
             result += self.data[i] * (i + first_subblock_id)
