@@ -1,4 +1,6 @@
 from copy import deepcopy
+from collections import defaultdict
+import heapq
 from typing import Iterable, List, AnyStr, Sized
 
 
@@ -94,18 +96,44 @@ def compact(blocks: List[Block]) -> List[Block]:
 
 
 def defrag(blocks: List[Block]) -> List[Block]:
+    """Defragment the file system. But not like the cool DOS tool.
+
+    >>> compact_str(defrag(generate_filesystem("2333133121414131402")))
+    '00992111777.44.333....5555.6666.....8888..'
+    """
     blocks = deepcopy(blocks)
     file_id = len(blocks) - 1
     if file_id % 2 == 1: file_id -= 1
 
+    free_list = defaultdict(list)
+    for block_id in range(1, len(blocks), 2):
+        size = blocks[block_id].free_space()
+        if size > 0:
+            heapq.heappush(free_list[size], block_id)
+
     for file_id in range(file_id, 1, -2):
         file_size = len(blocks[file_id])
-        for space_id in range(1, file_id, 2):
-            if blocks[space_id].free_space() >= file_size:
-                data_to_insert = blocks[file_id].pop(file_size)
-                blocks[space_id].insert_data(data_to_insert)
-                break
-        file_id -= 2
+
+        space_id, space_size = None, None
+        for s in range(file_size, 10):
+            if len(free_list[s]) == 0: continue
+            candidate = free_list[s][0]
+            if candidate > file_id: continue
+
+            if space_id is None or space_id > candidate:
+                space_id = candidate
+                space_size = s
+
+        if space_id is None: continue
+
+        assert heapq.heappop(free_list[space_size]) == space_id
+        if space_size - file_size > 0:
+            heapq.heappush(free_list[space_size - file_size], space_id)
+
+        assert space_id < file_id
+        if blocks[space_id].free_space() >= file_size:
+            data_to_insert = blocks[file_id].pop(file_size)
+            blocks[space_id].insert_data(data_to_insert)
 
     return blocks
 
