@@ -157,7 +157,7 @@ if __name__ == '__main__':
 
     doctest.testmod()
 
-    with open('p9.txt', 'r') as file:
+    with open('really_evil_input.txt', 'r') as file:
         data = file.read().strip()
 
     blocks = generate_filesystem(data)

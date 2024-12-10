@@ -2,29 +2,7 @@ from collections import defaultdict
 from itertools import permutations
 from typing import List, AnyStr, Set, Tuple
 
-
-class Coord(object):
-    def __init__(self, i: int, j: int):
-        self.i = i
-        self.j = j
-
-    def in_bounds(self, grid: List[AnyStr]) -> bool:
-        return 0 <= self.i < len(grid) and 0 <= self.j < len(grid[0])
-
-    def __add__(self, other):
-        return Coord(self.i + other.i, self.j + other.j)
-
-    def __sub__(self, other):
-        return Coord(self.i - other.i, self.j - other.j)
-
-    def __eq__(self, other):
-        return self.i == other.i and self.j == other.j
-
-    def __hash__(self):
-        return hash((self.i, self.j))
-
-    def __repr__(self):
-        return f"Coord({self.i}, {self.j})"
+from aoc import Coord
 
 
 class Solution(object):
