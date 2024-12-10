@@ -1,36 +1,6 @@
-from collections import namedtuple
-from enum import Enum
 from typing import List, AnyStr, Tuple, Optional, Set, Iterator
 
-
-class Direction(Enum):
-    UP = 1
-    RIGHT = 2
-    DOWN = 3
-    LEFT = 4
-
-    def turn(self):
-        new_direction = {
-            Direction.UP: Direction.RIGHT,
-            Direction.RIGHT: Direction.DOWN,
-            Direction.DOWN: Direction.LEFT,
-            Direction.LEFT: Direction.UP,
-        }
-        return new_direction[self]
-
-
-Coord = namedtuple("Coord", ["i", "j"])
-
-
-def next_position(direction: Direction, p: Coord) -> Coord:
-    if direction == Direction.UP:
-        return Coord(p.i - 1, p.j)
-    if direction == Direction.RIGHT:
-        return Coord(p.i, p.j + 1)
-    if direction == Direction.DOWN:
-        return Coord(p.i + 1, p.j)
-    if direction == Direction.LEFT:
-        return Coord(p.i, p.j - 1)
+from aoc import Coord, Direction
 
 
 class Map(object):
@@ -50,11 +20,8 @@ class Map(object):
         else:
             raise Exception('No starting position found!')
 
-    def is_out_of_bounds(self, p: Coord) -> bool:
-        return p.i < 0 or p.i >= self.height or p.j < 0 or p.j >= self.width
-
     def is_obstacle(self, p: Coord) -> bool:
-        return not self.is_out_of_bounds(p) and self.lines[p.i][p.j] == '#'
+        return p.in_bounds(self.lines) and self.lines[p.i][p.j] == '#'
 
     def walk(self, direction: Direction, start: Coord,
              extra_obstacle: Optional[Coord] = None) -> Iterator[Tuple[
@@ -63,13 +30,14 @@ class Map(object):
 
         while True:
             yield pos, direction
-            np = next_position(direction, pos)
-            if self.is_out_of_bounds(np):
+            np = pos + direction.value
+            if not np.in_bounds(self.lines):
                 return
 
-            while self.is_obstacle(np) or np == extra_obstacle:
-                direction = direction.turn()
-                np = next_position(direction, pos)
+            while self.is_obstacle(np) or (
+                    extra_obstacle is not None and np == extra_obstacle):
+                direction = direction.turn_right()
+                np = pos + direction.value
 
             pos = np
 

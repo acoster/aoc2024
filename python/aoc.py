@@ -1,7 +1,10 @@
+from enum import Enum
 from typing import List, Any
 
 
 class Coord(object):
+    """2D coordinates."""
+
     def __init__(self, i: int, j: int):
         self.i = i
         self.j = j
@@ -25,7 +28,17 @@ class Coord(object):
         return f"Coord({self.i}, {self.j})"
 
 
-UP = Coord(-1, 0)
-RIGHT = Coord(0, 1)
-DOWN = Coord(0, -1)
-LEFT = Coord(1, 0)
+class Direction(Enum):
+    UP = Coord(-1, 0)
+    RIGHT = Coord(0, 1)
+    DOWN = Coord(1, 0)
+    LEFT = Coord(0, -1)
+
+    def turn_right(self):
+        new_direction = {
+            Direction.UP: Direction.RIGHT,
+            Direction.RIGHT: Direction.DOWN,
+            Direction.DOWN: Direction.LEFT,
+            Direction.LEFT: Direction.UP,
+        }
+        return new_direction[self]

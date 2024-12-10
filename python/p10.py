@@ -1,6 +1,6 @@
-from typing import List, Optional, Set, Tuple
+from typing import Iterator, List, Optional, Set, Tuple
 
-from aoc import Coord, UP, RIGHT, DOWN, LEFT
+from aoc import Coord, Direction
 
 
 class Grid(object):
@@ -9,13 +9,14 @@ class Grid(object):
         self.height = len(grid)
         self.width = len(grid[0])
 
-    def trailheads(self):
+    def trailheads(self) -> Iterator[Coord]:
         for i in range(self.height):
             for j in range(self.width):
                 if self.grid[i][j] == 0:
                     yield Coord(i, j)
 
-    def visit(self, pos: Coord, path: List[Coord], peaks: Optional[Set[Coord]] = None) -> int:
+    def visit(self, pos: Coord, path: List[Coord],
+              peaks: Optional[Set[Coord]] = None) -> int:
         if self.grid[pos.i][pos.j] == 9:
             if peaks is not None:
                 peaks.add(pos)
@@ -24,8 +25,8 @@ class Grid(object):
         altitude = self.grid[pos.i][pos.j]
 
         score = 0
-        for direction in (UP, RIGHT, DOWN, LEFT):
-            np = pos + direction
+        for direction in Direction:
+            np = pos + direction.value
             if np in path or not np.in_bounds(self.grid):
                 continue
             na = self.grid[np.i][np.j]
