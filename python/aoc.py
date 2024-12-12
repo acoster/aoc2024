@@ -42,3 +42,12 @@ class Direction(Enum):
             Direction.LEFT: Direction.UP,
         }
         return new_direction[self]
+
+    def turn_left(self):
+        new_direction = {
+            Direction.UP: Direction.LEFT,
+            Direction.LEFT: Direction.DOWN,
+            Direction.DOWN: Direction.RIGHT,
+            Direction.RIGHT: Direction.UP,
+        }
+        return new_direction[self]

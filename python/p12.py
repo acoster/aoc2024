@@ -1,36 +1,35 @@
 from aoc import Coord, Direction
-from typing import List, AnyStr, Set
+from typing import List, AnyStr, Iterator
 
 class Grid(object):
     def __init__(self, lines: List[AnyStr]):
-        self._width = len(lines[0])
-        self._height = len(lines)
-        self.lines = lines
+        self.__width = len(lines[0])
+        self.__width = len(lines)
+        self.__lines = lines
 
     def __getitem__(self, key: Coord):
-        return self.lines[key.i][key.j]
+        return self.__lines[key.i][key.j]
 
-    def in_bounds(self, key: Coord):
+    def in_bounds(self, key: Coord) -> bool:
         return 0 <= key.i < self.height and 0 <= key.j < self.width
 
-    def keys(self):
-        for i in range (0, self._height):
-            for j in range (0, self._width):
+    def keys(self) -> Iterator[Coord]:
+        for i in range (0, self.__width):
+            for j in range (0, self.__width):
                 yield Coord(i, j)
 
     @property
     def width(self):
-        return self._width
+        return self.__width
 
     @property
     def height(self):
-        return self._height
+        return self.__width
 
 
 
-def flood_fill(grid: Grid):
-    p1_answer = 0
-    p2_answer = 0
+def solve(grid: Grid):
+    p1_answer, p2_answer = 0, 0
     not_visited = {x for x in grid.keys()}
 
     while not_visited:
@@ -47,23 +46,31 @@ def flood_fill(grid: Grid):
             perimeter += 4
             for direction in Direction:
                 new_node = node + direction.value
-                if not grid.in_bounds(new_node): continue
-                if grid[new_node] != letter:
-                    edges.add((new_node, direction.value))
+                if not grid.in_bounds(new_node) or grid[new_node] != letter:
+                    edges.add((node, direction))
                     continue
                 perimeter -= 1
 
                 if new_node not in not_visited:
                     continue
+
                 not_visited.remove(new_node)
                 stack.append(new_node)
 
+        correction = 0
+        for pos, direction in edges:
+            left_neighbour = pos + direction.turn_left().value
+            if (left_neighbour, direction) in edges:
+                correction += 1
+
         p1_answer += area * perimeter
+        p2_answer += area * (len(edges) - correction)
 
     return p1_answer, p2_answer
 
 
-with open('p12.txt') as f:
-    grid = Grid([l.strip() for l in f.readlines()])
+if __name__ == '__main__':
+    with open('small.txt') as f:
+        grid = Grid([l.strip() for l in f.readlines()])
 
-print(flood_fill(grid))
+    print(solve(grid))
