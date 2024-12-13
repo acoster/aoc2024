@@ -1,5 +1,19 @@
+import itertools
 from enum import Enum
 from typing import List, Any
+
+
+def batched(iterable, n, *, strict=False):
+    if hasattr(itertools, 'batched'):
+        return itertools.batched(iterable, n, strict=strict)
+
+    if n < 1:
+        raise ValueError('n must be at least one')
+    iterator = iter(iterable)
+    while batch := tuple(itertools.islice(iterator, n)):
+        if strict and len(batch) != n:
+            raise ValueError('batched(): incomplete batch')
+        yield batch
 
 
 class Coord(object):
@@ -51,3 +65,4 @@ class Direction(Enum):
             Direction.RIGHT: Direction.UP,
         }
         return new_direction[self]
+

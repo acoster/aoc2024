@@ -1,11 +1,10 @@
 import re
 from dataclasses import dataclass
-from itertools import batched
 from typing import List, AnyStr, Iterator
 
 import z3
 
-from aoc import Coord
+from aoc import batched, Coord
 
 
 @dataclass
