@@ -43,21 +43,28 @@ class Direction(Enum):
     DOWN = Coord(0, 1)
     LEFT = Coord(-1, 0)
 
+    @staticmethod
+    def from_char(str: str):
+        return {
+            "^": Direction.UP,
+            ">": Direction.RIGHT,
+            "v": Direction.DOWN,
+            "<": Direction.LEFT,
+        }[str]
+
     def turn_right(self):
-        new_direction = {
+        return {
             Direction.UP: Direction.RIGHT,
             Direction.RIGHT: Direction.DOWN,
             Direction.DOWN: Direction.LEFT,
             Direction.LEFT: Direction.UP,
-        }
-        return new_direction[self]
+        }[self]
 
     def turn_left(self):
-        new_direction = {
+        return {
             Direction.UP: Direction.LEFT,
             Direction.LEFT: Direction.DOWN,
             Direction.DOWN: Direction.RIGHT,
             Direction.RIGHT: Direction.UP,
-        }
-        return new_direction[self]
+        }[self]
 
