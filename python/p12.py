@@ -4,19 +4,19 @@ from typing import List, AnyStr, Iterator
 class Grid(object):
     def __init__(self, lines: List[AnyStr]):
         self.__width = len(lines[0])
-        self.__width = len(lines)
+        self.__height = len(lines)
         self.__lines = lines
 
     def __getitem__(self, key: Coord):
-        return self.__lines[key.i][key.j]
+        return self.__lines[key.x][key.y]
 
     def in_bounds(self, key: Coord) -> bool:
-        return 0 <= key.i < self.height and 0 <= key.j < self.width
+        return 0 <= key.y < self.height and 0 <= key.x < self.width
 
     def keys(self) -> Iterator[Coord]:
-        for i in range (0, self.__width):
-            for j in range (0, self.__width):
-                yield Coord(i, j)
+        for x in range (0, self.__width):
+            for y in range (0, self.__height):
+                yield Coord(x, y)
 
     @property
     def width(self):
@@ -24,7 +24,7 @@ class Grid(object):
 
     @property
     def height(self):
-        return self.__width
+        return self.__height
 
 
 
@@ -70,7 +70,7 @@ def solve(grid: Grid):
 
 
 if __name__ == '__main__':
-    with open('small.txt') as f:
+    with open('p12.txt') as f:
         grid = Grid([l.strip() for l in f.readlines()])
 
     print(solve(grid))

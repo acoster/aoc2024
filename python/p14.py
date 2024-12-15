@@ -1,11 +1,12 @@
-from dataclasses import dataclass
-from typing import AnyStr
-from enum import Enum
-from copy import deepcopy
-from collections import defaultdict
 import re
+from collections import defaultdict
+from copy import deepcopy
+from dataclasses import dataclass
+from enum import Enum
+from typing import AnyStr
 
 from aoc import Coord
+
 
 class Quadrant(Enum):
     NW = 1
@@ -14,23 +15,25 @@ class Quadrant(Enum):
     SW = 4
     NONE = 5
 
+
 @dataclass(frozen=True)
 class Grid:
     width: int
     height: int
 
     def get_quadrant(self, coord: Coord) -> Quadrant:
-        if coord.i < self.width // 2:
-            if coord.j < self.height // 2:
+        if coord.x < self.width // 2:
+            if coord.y < self.height // 2:
                 return Quadrant.NW
-            elif coord.j > self.height // 2:
+            elif coord.y > self.height // 2:
                 return Quadrant.SW
-        elif coord.i > self.width // 2:
-            if coord.j < self.height // 2:
+        elif coord.x > self.width // 2:
+            if coord.y < self.height // 2:
                 return Quadrant.NE
-            elif coord.j > self.height // 2:
+            elif coord.y > self.height // 2:
                 return Quadrant.SE
         return Quadrant.NONE
+
 
 class Robot:
     def __init__(self, line: AnyStr, grid: Grid):
@@ -42,12 +45,12 @@ class Robot:
 
     def move(self, seconds: int) -> None:
         self.position = Coord(
-            (self.position.i + self.velocity.i * seconds) % self.grid.width,
-            (self.position.j + self.velocity.j * seconds) % self.grid.height
-        )
+            (self.position.x + self.velocity.x * seconds) % self.grid.width,
+            (self.position.y + self.velocity.y * seconds) % self.grid.height)
 
     def __repr__(self) -> str:
         return f'Robot({self.position}, {self.velocity})'
+
 
 def solve_part_1(robots: list[Robot]) -> int:
     robots = deepcopy(robots)
@@ -63,6 +66,7 @@ def solve_part_1(robots: list[Robot]) -> int:
         score *= frequency_table[quadrant]
 
     return score
+
 
 def print_map(positions):
     for y in range(103):

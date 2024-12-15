@@ -21,7 +21,7 @@ class Map(object):
             raise Exception('No starting position found!')
 
     def is_obstacle(self, p: Coord) -> bool:
-        return p.in_bounds(self.lines) and self.lines[p.i][p.j] == '#'
+        return p.in_bounds(self.lines) and self.lines[p.x][p.y] == '#'
 
     def walk(self, direction: Direction, start: Coord,
              extra_obstacle: Optional[Coord] = None) -> Iterator[Tuple[

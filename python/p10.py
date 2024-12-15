@@ -10,26 +10,26 @@ class Grid(object):
         self.width = len(grid[0])
 
     def trailheads(self) -> Iterator[Coord]:
-        for i in range(self.height):
-            for j in range(self.width):
-                if self.grid[i][j] == 0:
-                    yield Coord(i, j)
+        for y in range(self.height):
+            for x in range(self.width):
+                if self.grid[y][x] == 0:
+                    yield Coord(x, y)
 
     def visit(self, pos: Coord, path: List[Coord],
               peaks: Optional[Set[Coord]] = None) -> int:
-        if self.grid[pos.i][pos.j] == 9:
+        if self.grid[pos.y][pos.x] == 9:
             if peaks is not None:
                 peaks.add(pos)
             return 1
 
-        altitude = self.grid[pos.i][pos.j]
+        altitude = self.grid[pos.y][pos.x]
 
         score = 0
         for direction in Direction:
             np = pos + direction.value
             if np in path or not np.in_bounds(self.grid):
                 continue
-            na = self.grid[np.i][np.j]
+            na = self.grid[np.y][np.x]
             if na - altitude == 1:
                 score += self.visit(np, path + [pos], peaks)
 

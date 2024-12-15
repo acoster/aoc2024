@@ -32,8 +32,8 @@ def solve(puzzle: Puzzle, extra: int = 0) -> int:
     s = z3.Solver()
     a, b = z3.Ints("a b")
 
-    s.add(puzzle.a.i * a + puzzle.b.i * b == (puzzle.prize.i + extra))
-    s.add(puzzle.a.j * a + puzzle.b.j * b == (puzzle.prize.j + extra))
+    s.add(puzzle.a.x * a + puzzle.b.x * b == (puzzle.prize.x + extra))
+    s.add(puzzle.a.y * a + puzzle.b.y * b == (puzzle.prize.y + extra))
 
     if s.check() == z3.sat:
         m = s.model()

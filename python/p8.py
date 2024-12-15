@@ -12,10 +12,10 @@ class Solution(object):
         self.roof_map = roof_map
         self.antennas = defaultdict(list)
 
-        for i in range(len(roof_map)):
-            for j in range(len(roof_map[i])):
-                if roof_map[i][j] != '.':
-                    self.antennas[roof_map[i][j]].append(Coord(i, j))
+        for y in range(len(roof_map)):
+            for x in range(len(roof_map[y])):
+                if roof_map[y][x] != '.':
+                    self.antennas[roof_map[y][x]].append(Coord(x, y))
 
     def find_anti_nodes(self) -> Tuple[Set[Coord], Set[Coord]]:
         p1_anti_nodes = set()
